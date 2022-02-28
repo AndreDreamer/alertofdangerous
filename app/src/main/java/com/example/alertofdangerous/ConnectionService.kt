@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 class ConnectionService : Service() {
 
     private val baseURL = "https://t.me/s/andriysadovyi/0"
-    private var interval: Long = 30
+    private var interval: Long = 15
     private val airAlarm: CharSequence = "Повітряна тривога"
     private val airAlarmCancel: CharSequence = "Відбій повітряної тривоги"
 
@@ -24,6 +24,7 @@ class ConnectionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         someTask()
         notification()
+        AudioPlay.init(this)
         return START_STICKY
     }
 
@@ -39,9 +40,10 @@ class ConnectionService : Service() {
         )
 
         val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_FROM_BACKGROUND
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
         val notification: Notification = NotificationCompat.Builder(this, channelID)

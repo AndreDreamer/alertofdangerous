@@ -9,8 +9,6 @@ object AudioPlay {
     fun init(context: Context) {
         mediaPlayer = MediaPlayer.create(context, R.raw.sound_alert)
         mediaPlayer.isLooping = true
-        mediaPlayer.start()
-        mediaPlayer.pause()
     }
 
     fun startMusic() {

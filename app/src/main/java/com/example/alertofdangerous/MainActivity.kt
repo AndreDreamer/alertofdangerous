@@ -7,6 +7,8 @@ import android.widget.Toast
 import com.example.alertofdangerous.databinding.ActivityMainBinding
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.MediaPlayer
+import java.lang.Exception
 
 class MainActivity : Activity() {
 
@@ -20,7 +22,6 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        AudioPlay.init(applicationContext)
         setupViews()
         setContentView(binding.root)
     }
@@ -38,7 +39,11 @@ class MainActivity : Activity() {
             }
 
             bDisableSignal.setOnClickListener {
-                AudioPlay.stopMusic()
+                try {
+                    AudioPlay.stopMusic()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -72,7 +77,6 @@ class MainActivity : Activity() {
         ).show()
 
         stopService(Intent(this, ConnectionService::class.java))
-        AudioPlay.stopMusic()
         editor.putBoolean(appPreferencesActive, false)
         editor.apply()
     }
