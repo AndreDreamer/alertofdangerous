@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "146837519746",
+    "project_id": "airalert-2968a",
+    "storage_bucket": "airalert-2968a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146837519746:android:023f97bd9ada1ee255239b",
+        "android_client_info": {
+          "package_name": "com.example.alertofdangerous"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146837519746-c3hmlgca1dm9b3opl4agq6iuktn29i7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBTLHqZzIqDA_2dbmzEs8wDcfHXIcY3QA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146837519746-c3hmlgca1dm9b3opl4agq6iuktn29i7o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

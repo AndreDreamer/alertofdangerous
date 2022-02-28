@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class ConnectionService : Service() {
 
     private val BASE_URL = "https://t.me/s/andriysadovyi/0"
-    private var interval: Long = 30
+    private var interval: Long = 5
     private val AIR_ALARM: CharSequence = "Повітряна тривога"
     private val AIR_ALARM_CANCEL: CharSequence = "Відбій повітряної тривоги"
 
