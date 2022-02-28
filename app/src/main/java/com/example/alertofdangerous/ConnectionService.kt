@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class ConnectionService : Service() {
 
     private val BASE_URL = "https://t.me/s/andriysadovyi/0"
-    private var interval: Long = 5
+    private var interval: Long = 30
     private val AIR_ALARM: CharSequence = "Повітряна тривога"
     private val AIR_ALARM_CANCEL: CharSequence = "Відбій повітряної тривоги"
 
@@ -51,7 +51,7 @@ class ConnectionService : Service() {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -85,6 +85,8 @@ class ConnectionService : Service() {
                     val document = Jsoup.connect(BASE_URL).get()
                     val link: Element =
                         document.select("div.tgme_widget_message_text").last()
+
+                    Log.d(LOG_TAG, link.toString())
 
                     if (waitingToStart && link.toString().contains(AIR_ALARM)) {
                         waitingToStop = true
