@@ -1,9 +1,6 @@
 package com.example.alertofdangerous
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -50,11 +47,21 @@ class ConnectionService : Service() {
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
             channel
         )
+
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(R.string.infoSystemTurnedOn)).build()
+            .setContentText(getString(R.string.infoSystemTurnedOn))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .build()
         startForeground(1, notification)
     }
 
