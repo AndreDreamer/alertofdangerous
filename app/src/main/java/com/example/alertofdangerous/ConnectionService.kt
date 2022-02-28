@@ -46,7 +46,7 @@ class ConnectionService : Service() {
 
         val notification: Notification = NotificationCompat.Builder(this, channelID)
             .setOngoing(true)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.infoSystemTurnedOn))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
