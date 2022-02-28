@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Сирени України</string>
+    <string name="btn_turn_on_text">Увімкнути систему сповіщень</string>
+    <string name="btn_turn_of_text">Вимкнути систему сповіщень</string>
+
+    <string name="system_turned_on">Система cповіщень працює!</string>
+    <string name="system_turned_off">Система cповіщень вимкнута!</string>
+
+</resources>
