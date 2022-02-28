@@ -2,7 +2,6 @@ package com.example.alertofdangerous
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.provider.Settings
 
 object AudioPlay {
     private lateinit var mediaPlayer: MediaPlayer

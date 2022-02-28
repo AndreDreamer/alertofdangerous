@@ -10,13 +10,11 @@ import android.content.SharedPreferences
 
 class MainActivity : Activity() {
 
-    private val APP_PREFERENCES = "mysettings"
-    private val APP_PREFERENCES_ACTIVE = "Active"
-
+    private val appPreferences = "mysettings"
+    private val appPreferencesActive = "Active"
 
     private lateinit var mSettings: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +23,6 @@ class MainActivity : Activity() {
         AudioPlay.init(applicationContext)
         setupViews()
         setContentView(binding.root)
-
     }
 
     private fun setupViews() {
@@ -47,10 +44,10 @@ class MainActivity : Activity() {
     }
 
     private fun checkActive() {
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+        mSettings = getSharedPreferences(appPreferences, Context.MODE_PRIVATE)
         editor = mSettings.edit()
 
-        val active = mSettings.getBoolean(APP_PREFERENCES_ACTIVE, false)
+        val active = mSettings.getBoolean(appPreferencesActive, false)
         binding.toggleButton.isChecked = active
     }
 
@@ -63,7 +60,7 @@ class MainActivity : Activity() {
         ).show()
 
         startForegroundService(Intent(this, ConnectionService::class.java))
-        editor.putBoolean(APP_PREFERENCES_ACTIVE, true)
+        editor.putBoolean(appPreferencesActive, true)
         editor.apply()
     }
 
@@ -76,7 +73,7 @@ class MainActivity : Activity() {
 
         stopService(Intent(this, ConnectionService::class.java))
         AudioPlay.stopMusic()
-        editor.putBoolean(APP_PREFERENCES_ACTIVE, false)
+        editor.putBoolean(appPreferencesActive, false)
         editor.apply()
     }
 

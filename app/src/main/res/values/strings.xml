@@ -3,8 +3,8 @@
     <string name="bTurnOnSystem">Увімкнути систему сповіщень</string>
     <string name="bTurnOffSystem">Вимкнути систему сповіщень</string>
 
-    <string name="infoSystemTurnedOn">Система cповіщень працює!</string>
-    <string name="infoSystemTurnedOff">Система cповіщень вимкнута!</string>
+    <string name="infoSystemTurnedOn">Система сповіщень працює!</string>
+    <string name="infoSystemTurnedOff">Система сповіщень вимкнута!</string>
 
     <string name="tvInformation">«УВАГА ВСІМ». Почувши сигнал тривоги, негайно увімкніть гучномовець, радіоприймач або телевізор і слухайте повідомлення центральних та місцевих органів виконавчої влади, їх структурних підрозділів з питань надзвичайних ситуацій.</string>
     <string name="bTurnOffAlarm">Вимкнути сирену</string>

@@ -4,34 +4,24 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class ConnectionService : Service() {
 
-    private val BASE_URL = "https://t.me/s/andriysadovyi/0"
+    private val baseURL = "https://t.me/s/andriysadovyi/0"
     private var interval: Long = 30
-    private val AIR_ALARM: CharSequence = "Повітряна тривога"
-    private val AIR_ALARM_CANCEL: CharSequence = "Відбій повітряної тривоги"
+    private val airAlarm: CharSequence = "Повітряна тривога"
+    private val airAlarmCancel: CharSequence = "Відбій повітряної тривоги"
 
-    private val LOG_TAG = "myLogs"
     private var running = false
-
     private var waitingToStart = true
     private var waitingToStop = false
-    private val CHANNEL_ID = "alert program notification"
-
-    override fun onCreate() {
-        super.onCreate()
-        Log.d(LOG_TAG, "onCreate")
-    }
+    private val channelID = "alert program notification"
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(LOG_TAG, "onStartCommand")
         someTask()
         notification()
         return START_STICKY
@@ -39,7 +29,7 @@ class ConnectionService : Service() {
 
     private fun notification() {
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            channelID,
             "Channel of alert program notification",
             NotificationManager.IMPORTANCE_HIGH
         )
@@ -54,7 +44,7 @@ class ConnectionService : Service() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
-        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification: Notification = NotificationCompat.Builder(this, channelID)
             .setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(getString(R.string.app_name))
@@ -66,14 +56,12 @@ class ConnectionService : Service() {
     }
 
     override fun onDestroy() {
-        Log.d(LOG_TAG, "onDestroy")
         running = false
         stopSelf()
         super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        Log.d(LOG_TAG, "onBind")
         return null
     }
 
@@ -82,19 +70,17 @@ class ConnectionService : Service() {
         Thread {
             while (running) {
                 try {
-                    val document = Jsoup.connect(BASE_URL).get()
+                    val document = Jsoup.connect(baseURL).get()
                     val link: Element =
                         document.select("div.tgme_widget_message_text").last()
 
-                    Log.d(LOG_TAG, link.toString())
-
-                    if (waitingToStart && link.toString().contains(AIR_ALARM)) {
+                    if (waitingToStart && link.toString().contains(airAlarm)) {
                         waitingToStop = true
                         waitingToStart = false
                         AudioPlay.startMusic()
                     }
 
-                    if (waitingToStop && link.toString().contains(AIR_ALARM_CANCEL)) {
+                    if (waitingToStop && link.toString().contains(airAlarmCancel)) {
                         waitingToStop = false
                         waitingToStart = true
                         AudioPlay.startMusic()
