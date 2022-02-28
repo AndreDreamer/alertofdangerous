@@ -58,7 +58,7 @@ class MainActivity : Activity() {
     private fun turnOnAlert() {
         Toast.makeText(
             applicationContext,
-            R.string.system_turned_on,
+            R.string.infoSystemTurnedOn,
             Toast.LENGTH_SHORT
         ).show()
 
@@ -70,7 +70,7 @@ class MainActivity : Activity() {
     private fun turnOffAlert() {
         Toast.makeText(
             applicationContext,
-            R.string.system_turned_off,
+            R.string.infoSystemTurnedOff,
             Toast.LENGTH_SHORT
         ).show()
 

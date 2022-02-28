@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Сирени України</string>
-    <string name="btn_turn_on_text">Увімкнути систему сповіщень</string>
-    <string name="btn_turn_of_text">Вимкнути систему сповіщень</string>
+    <string name="bTurnOnSystem">Увімкнути систему сповіщень</string>
+    <string name="bTurnOffSystem">Вимкнути систему сповіщень</string>
 
-    <string name="system_turned_on">Система cповіщень працює!</string>
-    <string name="system_turned_off">Система cповіщень вимкнута!</string>
+    <string name="infoSystemTurnedOn">Система cповіщень працює!</string>
+    <string name="infoSystemTurnedOff">Система cповіщень вимкнута!</string>
+
+    <string name="tvInformation">«УВАГА ВСІМ». Почувши сигнал тривоги, негайно увімкніть гучномовець, радіоприймач або телевізор і слухайте повідомлення центральних та місцевих органів виконавчої влади, їх структурних підрозділів з питань надзвичайних ситуацій.</string>
+    <string name="bTurnOffAlarm">Вимкнути сирену</string>
 
 </resources>

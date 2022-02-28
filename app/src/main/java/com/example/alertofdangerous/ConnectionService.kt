@@ -54,7 +54,7 @@ class ConnectionService : Service() {
             .setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(R.string.system_turned_on)).build()
+            .setContentText(getString(R.string.infoSystemTurnedOn)).build()
         startForeground(1, notification)
     }
 
