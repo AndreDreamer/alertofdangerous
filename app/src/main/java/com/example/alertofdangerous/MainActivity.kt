@@ -7,7 +7,6 @@ import android.widget.Toast
 import com.example.alertofdangerous.databinding.ActivityMainBinding
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.MediaPlayer
 import java.lang.Exception
 
 class MainActivity : Activity() {

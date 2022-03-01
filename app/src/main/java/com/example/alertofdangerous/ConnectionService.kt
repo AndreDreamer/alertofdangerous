@@ -3,6 +3,7 @@ package com.example.alertofdangerous
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import org.jsoup.Jsoup
@@ -59,6 +60,7 @@ class ConnectionService : Service() {
 
     override fun onDestroy() {
         running = false
+        AudioPlay.stopMusic()
         stopSelf()
         super.onDestroy()
     }
@@ -79,12 +81,16 @@ class ConnectionService : Service() {
                     if (waitingToStart && link.toString().contains(airAlarm)) {
                         waitingToStop = true
                         waitingToStart = false
+
+                        setMaxVolume()
                         AudioPlay.startMusic()
                     }
 
                     if (waitingToStop && link.toString().contains(airAlarmCancel)) {
                         waitingToStop = false
                         waitingToStart = true
+
+                        setMaxVolume()
                         AudioPlay.startMusic()
                     }
                 } catch (e: Exception) {
@@ -98,6 +104,19 @@ class ConnectionService : Service() {
                 }
             }
         }.start()
+    }
+
+    private fun setMaxVolume() {
+        try {
+            val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+            audioManager.setStreamVolume(
+                AudioManager.STREAM_MUSIC,
+                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                0
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
 
