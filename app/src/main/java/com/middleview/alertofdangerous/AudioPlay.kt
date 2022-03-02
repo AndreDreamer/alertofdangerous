@@ -1,4 +1,4 @@
-package com.example.alertofdangerous
+package com.middleview.alertofdangerous
 
 import android.content.Context
 import android.media.MediaPlayer

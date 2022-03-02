@@ -1,4 +1,4 @@
-package com.example.alertofdangerous
+package com.middleview.alertofdangerous
 
 import org.junit.Test
 

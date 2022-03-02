@@ -1,10 +1,11 @@
-package com.example.alertofdangerous
+package com.middleview.alertofdangerous
 
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -21,12 +22,29 @@ class ConnectionService : Service() {
     private var waitingToStart = true
     private var waitingToStop = false
     private val channelID = "alert program notification"
+    private lateinit var wakeLock: PowerManager.WakeLock
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         someTask()
         notification()
         AudioPlay.init(this)
+        wakeLockAction()
         return START_STICKY
+    }
+
+    private fun wakeLockAction() {
+        try {
+            wakeLock =
+                (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                    newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AlertOfDangerous::lock").apply {
+                        acquire()
+                    }
+                }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     private fun notification() {

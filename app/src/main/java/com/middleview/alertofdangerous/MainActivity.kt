@@ -1,10 +1,10 @@
-package com.example.alertofdangerous
+package com.middleview.alertofdangerous
 
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.example.alertofdangerous.databinding.ActivityMainBinding
+import com.middleview.alertofdangerous.databinding.ActivityMainBinding
 import android.content.Intent
 import android.content.SharedPreferences
 import java.lang.Exception
