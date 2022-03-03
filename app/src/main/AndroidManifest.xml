@@ -18,7 +18,8 @@
         <service
             android:name="com.middleview.alertofdangerous.ConnectionService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:process=":alertOfDangerous" />
 
         <activity
             android:name="com.middleview.alertofdangerous.MainActivity"
