@@ -16,6 +16,7 @@ class ConnectionService : Service() {
     private val baseURL = "https://t.me/s/dczloda/0"
     private var interval: Long = 30
     private val airAlarm: CharSequence = "Повітряна тривога"
+    private val airAlarm2: CharSequence = "Усім укритися в сховищах"
     private val airAlarmCancel: CharSequence = "Відбій повітряної тривоги"
 
     private var running = false
@@ -27,8 +28,8 @@ class ConnectionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         someTask()
         notification()
-        AudioPlay.init(this)
         wakeLockAction()
+        AudioPlay.init(this)
         return START_STICKY
     }
 
@@ -96,7 +97,9 @@ class ConnectionService : Service() {
                     val link: Element =
                         document.select("div.tgme_widget_message_text").last()
 
-                    if (waitingToStart && link.toString().contains(airAlarm)) {
+                    if (waitingToStart && (link.toString().contains(airAlarm) || link.toString()
+                            .contains(airAlarm2))
+                    ) {
                         waitingToStop = true
                         waitingToStart = false
 

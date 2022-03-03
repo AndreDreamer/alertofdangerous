@@ -19,7 +19,7 @@
             android:name="com.middleview.alertofdangerous.ConnectionService"
             android:enabled="true"
             android:exported="false"
-            android:process=":alertOfDangerous" />
+            android:foregroundServiceType="mediaPlayback" />
 
         <activity
             android:name="com.middleview.alertofdangerous.MainActivity"
