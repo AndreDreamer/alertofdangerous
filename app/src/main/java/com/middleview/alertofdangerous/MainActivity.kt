@@ -1,22 +1,49 @@
 package com.middleview.alertofdangerous
 
 import android.app.Activity
-import android.content.Context
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.widget.Toast
 import com.middleview.alertofdangerous.databinding.ActivityMainBinding
-import android.content.Intent
-import android.content.SharedPreferences
-import java.lang.Exception
+
 
 class MainActivity : Activity() {
 
-    private val appPreferences = "mysettings"
-    private val appPreferencesActive = "Active"
+    private lateinit var mService: ConnectionService
+    private var mBound: Boolean = false
 
-    private lateinit var mSettings: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
     private lateinit var binding: ActivityMainBinding
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            mService = (service as ConnectionService.LocalBinder).getService()
+            mBound = true
+            try {
+                binding.toggleButton.isChecked = mService.running
+
+                service.addListener(object : ConnectionService.MyCallback {
+                    override fun onCalled(text: String) {
+                        runOnUiThread { binding.textView.text = text }
+
+                    }
+                })
+                if (mService.waitingToStart) {
+                    binding.textView.text = getString(R.string.tvInformationSafe)
+                } else {
+                    binding.textView.text = getString(R.string.tvInformationDangerous)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            mBound = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +52,30 @@ class MainActivity : Activity() {
         setContentView(binding.root)
     }
 
-    private fun setupViews() {
 
-        checkActive()
+    override fun onResume() {
+        super.onResume()
+        bindConnectionService()
+    }
+
+    private fun bindConnectionService() {
+        if (!mBound) {
+            val bindInt = Intent(this, ConnectionService::class.java)
+            mBound = bindService(bindInt, connection, BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        try {
+            unbindService(connection)
+            mBound = false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun setupViews() {
         with(binding) {
             toggleButton.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -38,21 +86,9 @@ class MainActivity : Activity() {
             }
 
             bDisableSignal.setOnClickListener {
-                try {
                     AudioPlay.stopMusic()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
             }
         }
-    }
-
-    private fun checkActive() {
-        mSettings = getSharedPreferences(appPreferences, Context.MODE_PRIVATE)
-        editor = mSettings.edit()
-
-        val active = mSettings.getBoolean(appPreferencesActive, false)
-        binding.toggleButton.isChecked = active
     }
 
 
@@ -64,9 +100,9 @@ class MainActivity : Activity() {
         ).show()
 
         startForegroundService(Intent(this, ConnectionService::class.java))
-        editor.putBoolean(appPreferencesActive, true)
-        editor.apply()
+        bindConnectionService()
     }
+
 
     private fun turnOffAlert() {
         Toast.makeText(
@@ -75,10 +111,14 @@ class MainActivity : Activity() {
             Toast.LENGTH_SHORT
         ).show()
 
-        stopService(Intent(this, ConnectionService::class.java))
-        editor.putBoolean(appPreferencesActive, false)
-        editor.apply()
-    }
+        try {
+            unbindService(connection)
+            mBound = false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
+        stopService(Intent(this, ConnectionService::class.java))
+    }
 }
 

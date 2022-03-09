@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
@@ -11,25 +12,48 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.TimeUnit
 
+
 class ConnectionService : Service() {
 
-    private val baseURL = "https://t.me/s/dczloda/0"
+    //    private val baseURL = "https://t.me/s/dczloda/0"
+    private val baseURL = "https://t.me/s/testtestuaforua/0"
     private var interval: Long = 30
     private val airAlarm: CharSequence = "Повітряна тривога"
     private val airAlarm2: CharSequence = "Усім укритися в сховищах"
     private val airAlarmCancel: CharSequence = "Відбій повітряної тривоги"
 
-    private var running = false
-    private var waitingToStart = true
-    private var waitingToStop = false
+
+    private val binder = LocalBinder()
+    var running = false
+    var waitingToStart = true
+    var waitingToStop = false
     private val channelID = "alert program notification"
     private lateinit var wakeLock: PowerManager.WakeLock
 
+    inner class LocalBinder : Binder() {
+        lateinit var mListener: MyCallback
+
+        fun getService(): ConnectionService = this@ConnectionService
+
+
+        fun addListener(listener: MyCallback) {
+            mListener = listener
+        }
+
+    }
+
+    interface MyCallback {
+        fun onCalled(text: String)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        someTask()
-        notification()
-        wakeLockAction()
-        AudioPlay.init(this)
+        if (!running) {
+            someTask()
+            createNotificationChannel()
+            createNotification()
+            wakeLockAction()
+            AudioPlay.init(this)
+        }
         return START_STICKY
     }
 
@@ -41,14 +65,13 @@ class ConnectionService : Service() {
                         acquire()
                     }
                 }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
     }
 
-    private fun notification() {
+    private fun createNotificationChannel() {
         val channel = NotificationChannel(
             channelID,
             "Channel of alert program notification",
@@ -59,12 +82,12 @@ class ConnectionService : Service() {
             channel
         )
 
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_FROM_BACKGROUND
-        }
-        val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
+    private fun createNotification() {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification: Notification = NotificationCompat.Builder(this, channelID)
             .setOngoing(true)
@@ -84,8 +107,8 @@ class ConnectionService : Service() {
         super.onDestroy()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
     }
 
     private fun someTask() {
@@ -100,17 +123,17 @@ class ConnectionService : Service() {
                     if (waitingToStart && (link.toString().contains(airAlarm) || link.toString()
                             .contains(airAlarm2))
                     ) {
+                        binder.mListener.onCalled(getString(R.string.tvInformationDangerous))
                         waitingToStop = true
                         waitingToStart = false
-
                         setMaxVolume()
                         AudioPlay.startMusic()
                     }
 
                     if (waitingToStop && link.toString().contains(airAlarmCancel)) {
+                        binder.mListener.onCalled(getString(R.string.tvInformationSafe))
                         waitingToStop = false
                         waitingToStart = true
-
                         setMaxVolume()
                         AudioPlay.startMusic()
                     }
@@ -140,4 +163,6 @@ class ConnectionService : Service() {
         }
     }
 }
+
+
 

@@ -2,6 +2,7 @@ package com.middleview.alertofdangerous
 
 import android.content.Context
 import android.media.MediaPlayer
+import java.lang.Exception
 
 
 object AudioPlay {
@@ -17,7 +18,11 @@ object AudioPlay {
     }
 
     fun stopMusic() {
-        mediaPlayer.pause()
+        try {
+            mediaPlayer.pause()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 }
