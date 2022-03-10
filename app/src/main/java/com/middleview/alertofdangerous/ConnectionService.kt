@@ -3,7 +3,6 @@ package com.middleview.alertofdangerous
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
@@ -12,12 +11,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.TimeUnit
 
-
 class ConnectionService : Service() {
 
-    private val baseURL = "https://t.me/s/dczloda/0"
-
-    //    private val baseURL = "https://t.me/s/testtestuaforua/0"
+    //    private val baseURL = "https://t.me/s/dczloda/0"
+    private val baseURL = "https://t.me/s/testtestuaforua/0"
     private var interval: Long = 30
     private val airAlarm: CharSequence = "Повітряна тривога"
     private val airAlarm2: CharSequence = "Усім укритися в сховищах"
@@ -46,7 +43,7 @@ class ConnectionService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (!running) {
-            someTask()
+            scheduledTask()
             createNotificationChannel()
             createNotification()
             wakeLockAction()
@@ -108,7 +105,7 @@ class ConnectionService : Service() {
         return binder
     }
 
-    private fun someTask() {
+    private fun scheduledTask() {
         running = true
         Thread {
             while (running) {
@@ -117,21 +114,23 @@ class ConnectionService : Service() {
                     val link: Element =
                         document.select("div.tgme_widget_message_text").last()
 
+                    // Check for dangerous
                     if (waitingToStart && (link.toString().contains(airAlarm) || link.toString()
                             .contains(airAlarm2))
                     ) {
                         binder.mListener.onCalled(getString(R.string.tvInformationDangerous))
                         waitingToStop = true
                         waitingToStart = false
-                        setMaxVolume()
+                        AudioPlay.setMaxVolume(this)
                         AudioPlay.startMusic()
                     }
 
+                    // Check for safe
                     if (waitingToStop && link.toString().contains(airAlarmCancel)) {
                         binder.mListener.onCalled(getString(R.string.tvInformationSafe))
                         waitingToStop = false
                         waitingToStart = true
-                        setMaxVolume()
+                        AudioPlay.setMaxVolume(this)
                         AudioPlay.startMusic()
                     }
                 } catch (e: Exception) {
@@ -145,19 +144,6 @@ class ConnectionService : Service() {
                 }
             }
         }.start()
-    }
-
-    private fun setMaxVolume() {
-        try {
-            val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            audioManager.setStreamVolume(
-                AudioManager.STREAM_MUSIC,
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
-                0
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 }
 

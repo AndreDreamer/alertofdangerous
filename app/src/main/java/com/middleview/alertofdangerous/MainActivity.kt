@@ -12,25 +12,23 @@ import com.middleview.alertofdangerous.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {
 
-    private lateinit var mService: ConnectionService
-    private var mBound: Boolean = false
+    private lateinit var service: ConnectionService
+    private var bound: Boolean = false
 
     private lateinit var binding: ActivityMainBinding
 
     private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            mService = (service as ConnectionService.LocalBinder).getService()
-            mBound = true
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            service = (binder as ConnectionService.LocalBinder).getService()
+            bound = true
             try {
-                binding.toggleButton.isChecked = mService.running
-
-                service.addListener(object : ConnectionService.MyCallback {
+                binding.toggleButton.isChecked = service.running
+                binder.addListener(object : ConnectionService.MyCallback {
                     override fun onCalled(text: String) {
                         runOnUiThread { binding.textView.text = text }
-
                     }
                 })
-                if (mService.waitingToStart) {
+                if (service.waitingToStart) {
                     binding.textView.text = getString(R.string.tvInformationSafe)
                 } else {
                     binding.textView.text = getString(R.string.tvInformationDangerous)
@@ -41,7 +39,7 @@ class MainActivity : Activity() {
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
-            mBound = false
+            bound = false
         }
     }
 
@@ -59,9 +57,9 @@ class MainActivity : Activity() {
     }
 
     private fun bindConnectionService() {
-        if (!mBound) {
+        if (!bound) {
             val bindInt = Intent(this, ConnectionService::class.java)
-            mBound = bindService(bindInt, connection, BIND_AUTO_CREATE)
+            bound = bindService(bindInt, connection, BIND_AUTO_CREATE)
         }
     }
 
@@ -69,7 +67,7 @@ class MainActivity : Activity() {
         super.onStop()
         try {
             unbindService(connection)
-            mBound = false
+            bound = false
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -84,7 +82,6 @@ class MainActivity : Activity() {
                     turnOffAlert()
                 }
             }
-
             bDisableSignal.setOnClickListener {
                 AudioPlay.stopMusic()
             }
@@ -93,32 +90,26 @@ class MainActivity : Activity() {
 
 
     private fun turnOnAlert() {
-        Toast.makeText(
-            applicationContext,
-            R.string.infoSystemTurnedOn,
-            Toast.LENGTH_SHORT
-        ).show()
-
+        showMessage(getString(R.string.infoSystemTurnedOn))
         startForegroundService(Intent(this, ConnectionService::class.java))
         bindConnectionService()
     }
 
 
     private fun turnOffAlert() {
-        Toast.makeText(
-            applicationContext,
-            R.string.infoSystemTurnedOff,
-            Toast.LENGTH_SHORT
-        ).show()
-
+        showMessage(getString(R.string.infoSystemTurnedOff))
         try {
             unbindService(connection)
-            mBound = false
+            bound = false
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         stopService(Intent(this, ConnectionService::class.java))
+    }
+
+    private fun showMessage(text: String) {
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 }
 
