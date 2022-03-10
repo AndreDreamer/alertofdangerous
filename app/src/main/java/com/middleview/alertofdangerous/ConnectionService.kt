@@ -1,5 +1,6 @@
 package com.middleview.alertofdangerous
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -52,6 +53,7 @@ class ConnectionService : Service() {
         return START_STICKY
     }
 
+    @SuppressLint("WakelockTimeout")
     private fun wakeLockAction() {
         try {
             wakeLock =
