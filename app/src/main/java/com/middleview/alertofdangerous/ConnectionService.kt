@@ -15,8 +15,9 @@ import java.util.concurrent.TimeUnit
 
 class ConnectionService : Service() {
 
-    //    private val baseURL = "https://t.me/s/dczloda/0"
-    private val baseURL = "https://t.me/s/testtestuaforua/0"
+    private val baseURL = "https://t.me/s/dczloda/0"
+
+    //    private val baseURL = "https://t.me/s/testtestuaforua/0"
     private var interval: Long = 30
     private val airAlarm: CharSequence = "Повітряна тривога"
     private val airAlarm2: CharSequence = "Усім укритися в сховищах"
@@ -34,12 +35,9 @@ class ConnectionService : Service() {
         lateinit var mListener: MyCallback
 
         fun getService(): ConnectionService = this@ConnectionService
-
-
         fun addListener(listener: MyCallback) {
             mListener = listener
         }
-
     }
 
     interface MyCallback {
@@ -77,7 +75,6 @@ class ConnectionService : Service() {
             "Channel of alert program notification",
             NotificationManager.IMPORTANCE_HIGH
         )
-
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
             channel
         )
@@ -87,7 +84,7 @@ class ConnectionService : Service() {
     private fun createNotification() {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val notification: Notification = NotificationCompat.Builder(this, channelID)
             .setOngoing(true)

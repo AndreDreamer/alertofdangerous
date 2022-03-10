@@ -86,7 +86,7 @@ class MainActivity : Activity() {
             }
 
             bDisableSignal.setOnClickListener {
-                    AudioPlay.stopMusic()
+                AudioPlay.stopMusic()
             }
         }
     }
