@@ -1,6 +1,5 @@
 package com.middleview.alertofdangerous
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -44,16 +43,15 @@ class ConnectionService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (!running) {
-            scheduledTask()
             createNotificationChannel()
             createNotification()
             wakeLockAction()
+            scheduledTask()
             AudioPlay.init(this)
         }
         return START_STICKY
     }
 
-    @SuppressLint("WakelockTimeout")
     private fun wakeLockAction() {
         try {
             wakeLock =
@@ -88,7 +86,6 @@ class ConnectionService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, channelID)
             .setOngoing(true)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.infoSystemTurnedOn))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)

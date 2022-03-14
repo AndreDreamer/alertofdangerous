@@ -9,14 +9,13 @@ import android.os.IBinder
 import android.widget.Toast
 import com.middleview.alertofdangerous.databinding.ActivityMainBinding
 
-
 class MainActivity : Activity() {
 
     private lateinit var service: ConnectionService
+    private lateinit var binding: ActivityMainBinding
     private var bound: Boolean = false
 
-    private lateinit var binding: ActivityMainBinding
-
+    // Service connection
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
             service = (binder as ConnectionService.LocalBinder).getService()
@@ -90,7 +89,6 @@ class MainActivity : Activity() {
 
 
     private fun turnOnAlert() {
-        showMessage(getString(R.string.infoSystemTurnedOn))
         startForegroundService(Intent(this, ConnectionService::class.java))
         bindConnectionService()
     }
@@ -104,7 +102,6 @@ class MainActivity : Activity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         stopService(Intent(this, ConnectionService::class.java))
     }
 

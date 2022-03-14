@@ -10,8 +10,8 @@ android {
         applicationId "com.middleview.alertofdangerous"
         minSdk 26
         targetSdk 31
-        versionCode 25
-        versionName "2.3"
+        versionCode 27
+        versionName "2.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
