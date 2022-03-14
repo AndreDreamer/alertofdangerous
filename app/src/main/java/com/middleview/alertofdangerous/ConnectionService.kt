@@ -13,18 +13,18 @@ import java.util.concurrent.TimeUnit
 
 class ConnectionService : Service() {
 
-    private val baseURL = "https://t.me/s/dczloda/0"
-    //private val baseURL = "https://t.me/s/testtestuaforua/0"
+//    private val baseURL = "https://t.me/s/dczloda/0"
+
+    private val baseURL = "https://t.me/s/testtestuaforua/0"
     private var interval: Long = 30
-    private val airAlarm: CharSequence = "Повітряна тривога"
-    private val airAlarm2: CharSequence = "Усім укритися в сховищах"
-    private val airAlarmCancel: CharSequence = "Відбій повітряної тривоги"
+    private val airAlarm: CharSequence = "повітряна тривога"
+    private val airAlarm2: CharSequence = "укритися"
+    private val airAlarmCancel: CharSequence = "відбій"
 
 
     private val binder = LocalBinder()
     var running = false
     var waitingToStart = true
-    var waitingToStop = false
     private val channelID = "alert program notification"
     private lateinit var wakeLock: PowerManager.WakeLock
 
@@ -112,22 +112,19 @@ class ConnectionService : Service() {
                     val document = Jsoup.connect(baseURL).get()
                     val link: Element =
                         document.select("div.tgme_widget_message_text").last()
+                    val text = link.toString().lowercase()
 
                     // Check for dangerous
-                    if (waitingToStart && (link.toString().contains(airAlarm) || link.toString()
-                            .contains(airAlarm2))
-                    ) {
+                    if (waitingToStart && (text.contains(airAlarm) || text.contains(airAlarm2))) {
                         binder.mListener.onCalled(getString(R.string.tvInformationDangerous))
-                        waitingToStop = true
                         waitingToStart = false
                         AudioPlay.setMaxVolume(this)
                         AudioPlay.startMusic()
                     }
 
                     // Check for safe
-                    if (waitingToStop && link.toString().contains(airAlarmCancel)) {
+                    if (!waitingToStart && text.contains(airAlarmCancel)) {
                         binder.mListener.onCalled(getString(R.string.tvInformationSafe))
-                        waitingToStop = false
                         waitingToStart = true
                         AudioPlay.setMaxVolume(this)
                         AudioPlay.startMusic()
