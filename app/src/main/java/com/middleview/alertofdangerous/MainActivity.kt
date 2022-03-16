@@ -8,11 +8,12 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
 import com.middleview.alertofdangerous.databinding.ActivityMainBinding
+import com.middleview.alertofdangerous.extensions.viewBinding
 
 class MainActivity : Activity() {
 
     private lateinit var service: ConnectionService
-    private lateinit var binding: ActivityMainBinding
+    private val binding by viewBinding(ActivityMainBinding::inflate)
     private var bound: Boolean = false
 
     // Service connection
@@ -44,7 +45,6 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         setupViews()
         setContentView(binding.root)
     }
