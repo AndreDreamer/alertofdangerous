@@ -26,11 +26,7 @@ class MainActivity : FragmentActivity() {
                     1 -> tab.text = getString(R.string.fragment_name_info)
                 }
             }.attach()
-
-
         }
     }
-
-
 }
 

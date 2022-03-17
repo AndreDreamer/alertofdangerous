@@ -2,17 +2,23 @@ package com.middleview.alertofdangerous
 
 import android.app.Activity
 import android.content.ComponentName
+import android.content.Context
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.middleview.alertofdangerous.databinding.FragmentMainBinding
 import com.middleview.alertofdangerous.extensions.viewBinding
+
 
 class MainFragment : Fragment() {
 
@@ -91,6 +97,8 @@ class MainFragment : Fragment() {
             }
         }
     }
+
+
 
 
     private fun turnOnAlert() {

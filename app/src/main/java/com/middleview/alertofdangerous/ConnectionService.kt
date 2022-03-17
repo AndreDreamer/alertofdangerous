@@ -3,9 +3,11 @@ package com.middleview.alertofdangerous
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -14,7 +16,8 @@ import java.util.concurrent.TimeUnit
 class ConnectionService : Service() {
 
     private val baseURL = "https://t.me/s/dczloda/0"
-//    private val baseURL = "https://t.me/s/testtestuaforua/0"
+
+    //    private val baseURL = "https://t.me/s/testtestuaforua/0"
     private var interval: Long = 30
     private val airAlarm: CharSequence = "повітряна тривога"
     private val airAlarm2: CharSequence = "укритися"
@@ -44,11 +47,28 @@ class ConnectionService : Service() {
         if (!running) {
             createNotificationChannel()
             createNotification()
+            checkForIgnoreBatteryOptimization()
             wakeLockAction()
             scheduledTask()
             AudioPlay.init(this)
         }
         return START_STICKY
+    }
+
+    private fun checkForIgnoreBatteryOptimization() {
+        try {
+            val intent = Intent()
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val packageName: String = packageName
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager?
+            if (!pm!!.isIgnoringBatteryOptimizations(packageName)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun wakeLockAction() {
