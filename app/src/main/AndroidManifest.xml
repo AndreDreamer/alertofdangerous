@@ -23,6 +23,7 @@
             android:foregroundServiceType="mediaPlayback" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name="com.middleview.alertofdangerous.MainActivity"
             android:exported="true">
             <intent-filter>
